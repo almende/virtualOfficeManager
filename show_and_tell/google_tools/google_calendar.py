@@ -21,7 +21,7 @@ def view_file(num_entries=10):
     now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
     events_result = drive_api.events().list(calendarId='primary', timeMin=now,
                                             maxResults=num_entries, singleEvents=True,
-                                            orderBy='startTime').execute()
+                                            orderBy='startTime', q="Almende show-and-tell").execute()
     events = events_result.get('items', [])
 
     return flask.jsonify(events)
