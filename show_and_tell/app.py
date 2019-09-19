@@ -2,13 +2,14 @@ import os
 
 import flask
 
-from google_tools import google_drive, google_auth
+from google_tools import google_drive, google_auth, google_calendar
 
 app = flask.Flask(__name__)
 app.secret_key = os.environ.get("FN_FLASK_SECRET_KEY", default=False)
 
 app.register_blueprint(google_auth.bp)
 app.register_blueprint(google_drive.bp)
+app.register_blueprint(google_calendar.bp)
 
 
 @app.route('/')
