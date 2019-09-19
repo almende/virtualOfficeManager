@@ -2,8 +2,7 @@ import os
 
 import flask
 
-import google_drive
-import google_auth
+from google_tools import google_drive, google_auth
 
 app = flask.Flask(__name__)
 app.secret_key = os.environ.get("FN_FLASK_SECRET_KEY", default=False)
