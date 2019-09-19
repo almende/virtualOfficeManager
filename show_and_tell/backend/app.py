@@ -2,7 +2,7 @@ import os
 
 import flask
 
-from google_tools import google_drive, google_auth, google_calendar
+from backend.google_tools import google_calendar, google_auth, google_drive
 
 app = flask.Flask(__name__)
 app.secret_key = os.environ.get("FN_FLASK_SECRET_KEY", default=False)
