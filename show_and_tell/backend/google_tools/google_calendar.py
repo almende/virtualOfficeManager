@@ -16,7 +16,7 @@ def build_drive_api_v3():
 
 
 @bp.route('/gcal/view/<num_entries>', methods=['GET'])
-def view_file(num_entries=10):
+def view_upcoming_entries(num_entries=10):
     cal_api = build_drive_api_v3()
 
     # Call the Calendar API
