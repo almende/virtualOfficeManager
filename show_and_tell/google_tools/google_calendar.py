@@ -1,7 +1,7 @@
 from __future__ import print_function
 import datetime, re
 import googleapiclient.discovery
-from backend.google_tools.google_service import build_credentials
+from show_and_tell.google_tools.google_service import build_credentials
 
 import flask
 
