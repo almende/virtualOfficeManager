@@ -1,14 +1,12 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import SimpleTable from './components/Table';
+import React from "react";
+// import logo from "./logo.svg";
+import "./App.css";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        {SimpleTable()}
-      </header>
+      <header className="App-header">{Dashboard()}</header>
     </div>
   );
 }

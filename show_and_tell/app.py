@@ -1,10 +1,12 @@
 import os
 
 import flask
+from flask_cors import CORS
 
 from show_and_tell.google_tools import google_calendar, google_auth, google_drive
 
 app = flask.Flask(__name__)
+CORS(app)
 app.secret_key = os.environ.get("FN_FLASK_SECRET_KEY", default=False)
 
 app.register_blueprint(google_auth.bp)
