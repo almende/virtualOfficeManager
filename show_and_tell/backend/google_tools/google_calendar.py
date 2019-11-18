@@ -1,25 +1,27 @@
 from __future__ import print_function
 import datetime, re
 import googleapiclient.discovery
-from backend.google_tools.google_auth import build_credentials
+from backend.google_tools.google_service import build_credentials
 
 import flask
 
 bp = flask.Blueprint('google_calendar', __name__)
+AUTHORIZATION_SCOPE = 'https://www.googleapis.com/auth/calendar'
+API_NAME = 'calendar'
 
 
 def build_drive_api_v3():
-    credentials = build_credentials()
+    credentials = build_credentials(AUTHORIZATION_SCOPE)
     return googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
 
 
 @bp.route('/gcal/view/<num_entries>', methods=['GET'])
 def view_file(num_entries=10):
-    drive_api = build_drive_api_v3()
+    cal_api = build_drive_api_v3()
 
     # Call the Calendar API
     now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-    events_result = drive_api.events().list(calendarId='primary', timeMin=now,
+    events_result = cal_api.events().list(calendarId='voma@almende.org', timeMin=now,
                                             maxResults=num_entries, singleEvents=True,
                                             orderBy='startTime', q="Almende show-and-tell").execute()
     events = events_result.get('items', [])
