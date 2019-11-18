@@ -26,20 +26,11 @@ def view_upcoming_entries(num_entries=10):
                                             orderBy='startTime', q="Almende show-and-tell").execute()
     events = events_result.get('items', [])
 
-    to_return = []
-
     for event in events:
-        ret_env = {
-            "start": event["start"],
-            "end": event["end"],
-        }
-
         try:
-            ret_env["presenter"], ret_env["topic"] = re.match("[\n.]*Presenter: (.*)\n+Topic: (.*)",
+            event["presenter"], event["topic"] = re.match("[\n.]*Presenter: (.*)\n+Topic: (.*)",
                                                               event["description"]).groups()
         except AttributeError as e:
-            ret_env["presenter"], ret_env["topic"] = "ERROR", "ERROR"
+            event["presenter"], event["topic"] = "ERROR", "ERROR"
 
-        to_return.append(ret_env)
-
-    return flask.jsonify(to_return)
+    return flask.jsonify(events)
