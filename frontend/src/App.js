@@ -4,11 +4,7 @@ import "./App.css";
 import Dashboard from "./components/Dashboard";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">{Dashboard()}</header>
-    </div>
-  );
+  return <div className="App">{Dashboard()}</div>;
 }
 
 export default App;
