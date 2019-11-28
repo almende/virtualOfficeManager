@@ -37,7 +37,8 @@ def update_event():
 
         payload["description"] = description
 
-    response = cal_api.events().patch(calendarId=CALENDAR_ID, eventId=flask.request.get_json()["id"], body=payload).execute()
+    response = cal_api.events().patch(calendarId=CALENDAR_ID, eventId=flask.request.get_json()["id"], sendUpdates="all",
+                                      body=payload).execute()
 
     return response
 
