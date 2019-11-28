@@ -11,6 +11,7 @@ import Title from "./Title";
 import { withStyles } from "@material-ui/core/styles";
 import Moment from "moment";
 import ShowAndTellEditItem from "./ShowAndTellEditItem";
+import SvgIcon from "@material-ui/core/SvgIcon";
 
 const StyledTableCell = withStyles(theme => ({
   head: {
@@ -20,6 +21,14 @@ const StyledTableCell = withStyles(theme => ({
     fontSize: 14
   }
 }))(TableCell);
+
+function AlarmIcon(props) {
+  return (
+    <SvgIcon {...props}>
+      <path d="M.5 16h17L9 1 .5 16zm9.5-2H8v-2h2v2zm0-3H8V7h2v4z" />
+    </SvgIcon>
+  );
+}
 
 export default function ShowAndTellList() {
   const [data, setData] = useState([]);
@@ -103,6 +112,7 @@ export default function ShowAndTellList() {
       <Table size="small">
         <TableHead>
           <TableRow>
+            <TableCell></TableCell>
             <StyledTableCell>Date</StyledTableCell>
             <StyledTableCell>Time</StyledTableCell>
             <StyledTableCell>Duration</StyledTableCell>
@@ -117,6 +127,11 @@ export default function ShowAndTellList() {
               key={item.id}
               onClick={event => handleClick(event, item)}
             >
+              <TableCell>
+                {(item.presenter == "TBD" || item.topic == "TBD") && (
+                  <AlarmIcon htmlColor="red"></AlarmIcon>
+                )}
+              </TableCell>
               <TableCell>{item.start.date}</TableCell>
               <TableCell>{item.start.time}</TableCell>
               <TableCell>{item.duration_ms / 1000 / 60} minutes</TableCell>
