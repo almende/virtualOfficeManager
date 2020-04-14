@@ -11,7 +11,8 @@ Written in React. Currently is a shell that focuses on show-and-tell calendar en
 ## Show and tell manager
 Manages the show and tell calendar entries.
 
-###Backend
+### Backend
+
 Run with:
 
 `./run_showandtell_backend.sh`
