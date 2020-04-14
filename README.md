@@ -10,6 +10,7 @@ Written in React. Currently is a shell that focuses on show-and-tell calendar en
 
 ## Show and tell manager
 Manages the show and tell calendar entries.
+
 ###Backend
 Run with:
 
