@@ -4,8 +4,10 @@ This project is a collection of services which aid in office management. To inst
 `./install.sh`
 
 # Front end
-Written in React. Currently is a shell that focuses on show-and-tell calendar entries. To run, go to the `frontend` directory and execute:
+Written in React. Currently is a shell that focuses on show-and-tell calendar entries. To run, go to the `frontend` directory and and installs all the packages in package.json by executing:
+`npm install` 
 
+Then for easy starting of the app execute:
 `npm run start`
 
 ## Show and tell manager
