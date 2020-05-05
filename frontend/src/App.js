@@ -12,6 +12,47 @@ function App() {
     error: notLoggedInMessage,
   });
 
+  var defaultheader = function () {
+    return {
+      method: null,
+      mode: "cors",
+      body: null,
+      crossDomain: true,
+      cache: "no-cache",
+      async: false,
+      timeout: 3000,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "",
+        Accept: "*/*",
+        "Access-Control-Allow-Headers": "*",
+        "X-Requested-With": "XMLHttpRequest",
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+  };
+
+  function getContacts(token) {
+    const header = defaultheader();
+    header.method = "GET";
+    let url = "https://people.googleapis.com/v1/people/me/connections";
+
+    header.headers["Authorization"] = "Bearer " + token;
+    fetch(url, header)
+      .then((response) => {
+        setTimeout(() => {
+          let a = 0;
+        }, 0);
+        return response.json();
+      })
+      .then((responseJson) => {
+        console.log("responseJson=", responseJson);
+      })
+      .catch((error) => {
+        console.log("An error occurred.Please try again", error);
+      });
+  }
+
   function responseGoogle(response) {
     setCurrentUser(response);
     getContent();
@@ -20,6 +61,9 @@ function App() {
   function responseGoogleSuccess(response) {
     console.log("SUCCESS");
     responseGoogle(response);
+
+    var contacts = getContacts(currentUser.accessToken);
+    console.log(contacts);
   }
 
   function responseGoogleFailure(response) {
@@ -49,6 +93,7 @@ function App() {
             onSuccess={responseGoogleSuccess}
             onFailure={responseGoogleFailure}
             cookiePolicy={"single_host_origin"}
+            scope="profile email https://www.googleapis.com/auth/contacts"
           />
         </div>
       );
