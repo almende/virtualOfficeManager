@@ -35,7 +35,7 @@ export default function ShowAndTellEditItem(props) {
           type="string"
           fullWidth
           defaultValue={props.modalPresenter ? props.modalPresenter : "no data"}
-          onChange={event => props.setModalPresenter(event.target.value)}
+          onChange={(event) => props.setModalPresenter(event.target.value)}
         />
         <TextField
           autoFocus
@@ -45,7 +45,7 @@ export default function ShowAndTellEditItem(props) {
           type="string"
           fullWidth
           defaultValue={props.modalTopic ? props.modalTopic : "no data"}
-          onChange={event => props.setModalTopic(event.target.value)}
+          onChange={(event) => props.setModalTopic(event.target.value)}
         />
       </DialogContent>
       <DialogActions>
