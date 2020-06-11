@@ -3,15 +3,20 @@ import os
 import flask
 from flask_cors import CORS
 
-from show_and_tell.google_tools import google_calendar, google_auth, google_drive
+from show_and_tell.google_tools import google_calendar, google_auth, google_drive, google_contacts
 
 app = flask.Flask(__name__)
-CORS(app)
+CORS(app, resources={
+    r"/gcal/event": {"origins": "*"},
+    r"/gcal/view/*": {"origins": "*"},
+    r"/gcontacts/view/*": {"origins": "*"}
+})
 app.secret_key = os.environ.get("FN_FLASK_SECRET_KEY", default=False)
 
 app.register_blueprint(google_auth.bp)
 app.register_blueprint(google_drive.bp)
 app.register_blueprint(google_calendar.bp)
+app.register_blueprint(google_contacts.bp)
 
 
 @app.route('/')

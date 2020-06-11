@@ -13,13 +13,13 @@ import Moment from "moment";
 import ShowAndTellEditItem from "./ShowAndTellEditItem";
 import SvgIcon from "@material-ui/core/SvgIcon";
 
-const StyledTableCell = withStyles(theme => ({
+const StyledTableCell = withStyles((theme) => ({
   head: {
-    fontWeight: 700
+    fontWeight: 700,
   },
   body: {
-    fontSize: 14
-  }
+    fontSize: 14,
+  },
 }))(TableCell);
 
 function AlarmIcon(props) {
@@ -57,13 +57,13 @@ export default function ShowAndTellList() {
       start: modalStart,
       presenter: modalPresenter,
       topic: modalTopic,
-      id: modalId
+      id: modalId,
     });
 
-    const response = await patchData({
+    await patchData({
       presenter: modalPresenter,
       topic: modalTopic,
-      id: modalId
+      id: modalId,
     });
 
     fetchData(false);
@@ -121,11 +121,11 @@ export default function ShowAndTellList() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map(item => (
+          {data.map((item) => (
             <TableRow
               hover
               key={item.id}
-              onClick={event => handleClick(event, item)}
+              onClick={(event) => handleClick(event, item)}
             >
               <TableCell>
                 {(item.presenter == "TBD" || item.topic == "TBD") && (
