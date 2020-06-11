@@ -3,7 +3,7 @@ import os
 import flask
 from flask_cors import CORS
 
-from show_and_tell.google_tools import google_calendar, google_auth, google_drive, google_contacts
+from .google_tools import google_calendar, google_auth, google_drive, google_contacts
 
 app = flask.Flask(__name__)
 CORS(app, resources={

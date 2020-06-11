@@ -3,7 +3,7 @@ import os
 
 import flask
 
-from authlib.client import OAuth2Session
+from authlib.integrations.requests_client import OAuth2Session
 import google.oauth2.credentials
 import googleapiclient.discovery
 

@@ -5,7 +5,7 @@ import flask
 
 from apiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
 import googleapiclient.discovery
-from show_and_tell.google_tools.google_auth import build_credentials
+from .google_service import build_credentials
 
 from werkzeug.utils import secure_filename
 
