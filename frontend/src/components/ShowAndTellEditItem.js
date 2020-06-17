@@ -24,12 +24,12 @@ export default function ShowAndTellEditItem(props) {
   };
 
   function getDefaultPresenterOptionLabel(option) {
-    var name = "";
-    var email = "";
-
-    if (typeof option === "string") {
+    if (typeof option === "string" || option == null) {
       return option;
     }
+
+    var name = "";
+    var email = "";
 
     if ("names" in option) {
       name = option.names[0].displayName;
@@ -120,7 +120,7 @@ export default function ShowAndTellEditItem(props) {
             props.setModalPresenter(getDefaultPresenterOptionLabel(value))
           }
           // defaultValue={props.modalPresenter ? props.modalPresenter : "no data"}
-          value={props.modalPresenter || "no data"}
+          value={props.modalPresenter || ""}
           open={presenterOpen}
           onOpen={() => {
             setPresenterOpen(true);
@@ -128,16 +128,16 @@ export default function ShowAndTellEditItem(props) {
           onClose={() => {
             setPresenterOpen(false);
           }}
-          getOptionSelected={(option, value) => option.name === value.name}
+          getOptionSelected={(option, value) =>
+            getDefaultPresenterOptionLabel(option) === value
+          }
           getOptionLabel={(option) => getDefaultPresenterOptionLabel(option)}
-          // renderOption={(option) => renderPresenterOption(option)}
           options={options}
           loading={loading}
-          // renderInput={renderPresenterOption}
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Asynchronous"
+              label="Presenter"
               variant="outlined"
               InputProps={{
                 ...params.InputProps,

@@ -36,7 +36,7 @@ def update_event():
             t = flask.request.get_json()["topic"]
 
         description = re.sub(RE_SUB_MATCH_STRING,
-                             RE_SUB_REPLACE_STRING.format(p, t), description)
+                             RE_SUB_REPLACE_STRING.format('TBD' if p is None else p, t), description)
 
         payload["description"] = description
 
