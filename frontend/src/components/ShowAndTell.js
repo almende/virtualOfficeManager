@@ -49,17 +49,9 @@ export default function ShowAndTellList() {
     setModalTopic(item.topic);
     setModalId(item.id);
     setOpen(true);
-    console.log(item);
   };
 
   async function handleDialogSave() {
-    console.log({
-      start: modalStart,
-      presenter: modalPresenter,
-      topic: modalTopic,
-      id: modalId,
-    });
-
     await patchData({
       presenter: modalPresenter,
       topic: modalTopic,
