@@ -120,7 +120,7 @@ export default function ShowAndTellList() {
               onClick={(event) => handleClick(event, item)}
             >
               <TableCell>
-                {(item.presenter == "TBD" || item.topic == "TBD") && (
+                {(item.presenter === "TBD" || item.topic === "TBD") && (
                   <AlarmIcon htmlColor="red"></AlarmIcon>
                 )}
               </TableCell>

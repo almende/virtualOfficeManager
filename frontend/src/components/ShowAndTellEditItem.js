@@ -61,8 +61,6 @@ export default function ShowAndTellEditItem(props) {
   }
 
   React.useEffect(() => {
-    let active = true;
-
     if (!loading) {
       return undefined;
     }
@@ -76,21 +74,7 @@ export default function ShowAndTellEditItem(props) {
         setOptions(response.result.connections);
       });
 
-    // (async () => {
-    //   const response = await fetch(
-    //     "https://country.register.gov.uk/records.json?page-size=5000"
-    //   );
-    //   const countries = await response.json();
-
-    //   if (active) {
-    //     console.log(Object.keys(countries).map((key) => countries[key].item[0]))
-    //     // setOptions(Object.keys(countries).map((key) => countries[key].item[0]));
-    //   }
-    // })();
-
-    return () => {
-      active = false;
-    };
+    return () => {};
   }, [loading]);
 
   React.useEffect(() => {

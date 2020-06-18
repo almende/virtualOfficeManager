@@ -9,31 +9,10 @@ function App() {
   const clientId =
     "518561222908-ff4s6tej2ev3diklm30lrpfnaftv7kat.apps.googleusercontent.com";
   const notLoggedInMessage = "user not signed in";
-  const [auth2, setAuth2] = useState({});
   const [signedIn, setSignedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({
     error: notLoggedInMessage,
   });
-
-  var defaultheader = function () {
-    return {
-      method: null,
-      mode: "cors",
-      body: null,
-      crossDomain: true,
-      cache: "no-cache",
-      async: false,
-      timeout: 3000,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "",
-        Accept: "*/*",
-        "Access-Control-Allow-Headers": "*",
-        "X-Requested-With": "XMLHttpRequest",
-        "Access-Control-Allow-Origin": "*",
-      },
-    };
-  };
 
   const onAuthChange = (isSignedIn) => {
     setSignedIn(isSignedIn);
@@ -51,7 +30,6 @@ function App() {
 
     window.gapi.load("client:auth2", () => {
       window.gapi.client.init(params).then((response) => {
-        setAuth2(window.gapi.auth2.getAuthInstance());
         onAuthChange(window.gapi.auth2.getAuthInstance().isSignedIn.get());
         window.gapi.auth2.getAuthInstance().isSignedIn.listen(onAuthChange);
       });
@@ -73,8 +51,6 @@ function App() {
         ></Dashboard>
       );
     } else {
-      let msg = "";
-
       return (
         <div>
           {currentUser.error !== "user not signed in" && (
