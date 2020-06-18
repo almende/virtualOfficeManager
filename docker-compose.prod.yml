@@ -28,11 +28,13 @@ services:
       - 27017:27017
     command: mongod --logpath=/dev/null # --quiet
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    build: ./frontend
+    stdin_open: true
+    expose:
+      - 3000
     ports:
       - 3000:3000
-    environment:
-      - CHOKIDAR_USEPOLLING=true
+    links:
+      - show_and_tell
+    command: npm run start
 
