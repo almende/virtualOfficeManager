@@ -71,7 +71,7 @@ export default function ShowAndTellList() {
   }
 
   async function fetchData(ignore) {
-    const result = await axios("http://localhost:8040/gcal/view/" + query);
+    const result = await axios("http://localhost:5000/gcal/view/" + query);
 
     result.data.forEach(getStartDateTimeDurationFromEntry);
 
@@ -82,7 +82,7 @@ export default function ShowAndTellList() {
 
   async function patchData(payload) {
     const entry = await axios.patch(
-      "http://localhost:8040/gcal/event",
+      "http://localhost:5000/gcal/event",
       payload
     );
 

@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+  show_and_tell:
+    build: 
+        context: ./show_and_tell
+        dockerfile: Dockerfile.prod
+    command: gunicorn --bind 0.0.0.0:5000 flaskr:app
+    ports:
+      - 5000:5000
+    environment:
+      - FLASK_ENV=production
+      - PORT=5000
+      - FN_AUTH_REDIRECT_URI=http://localhost:5000/google/auth
+      - FN_BASE_URI=http://localhost:5000
+      - FN_CLIENT_ID=518561222908-6h6um6ldj04kh58g67s7vlv3stvf23d8.apps.googleusercontent.com
+      - FN_CLIENT_SECRET=fKfPPcJfQVrWKkQyivOFti0x
+      - FN_FLASK_SECRET_KEY=thisisasecret
+      - FN_SERVICE_JSON_FILE=google_service_account/graceful-splice-217714-df2055719b16.json
+  db:
+    image: mongo:latest
+    environment:
+      - MONGO_DATA_DIR=/usr/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data/db:/usr/data/db
+    ports:
+      - 27017:27017
+    command: mongod --logpath=/dev/null # --quiet
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
