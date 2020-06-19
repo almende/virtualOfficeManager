@@ -2,14 +2,13 @@ version: '3.7'
 
 services:
   show_and_tell:
-    build: 
-        context: ./show_and_tell
-        dockerfile: Dockerfile.prod
-    command: gunicorn --bind 0.0.0.0:5000 flaskr:app
+    build: ./show_and_tell
+    command: python manage.py run -h 0.0.0.0
     ports:
       - 5000:5000
     environment:
-      - FLASK_ENV=production
+      - FLASK_ENV=development
+      - FLASK_APP=flaskr
       - PORT=5000
       - FN_AUTH_REDIRECT_URI=http://localhost:5000/google/auth
       - FN_BASE_URI=http://localhost:5000
@@ -28,7 +27,11 @@ services:
       - 27017:27017
     command: mongod --logpath=/dev/null # --quiet
   frontend:
-    build: ./frontend
+    build: 
+        context: ./frontend
+        dockerfile: Dockerfile.prod
+        args:
+          - REACT_APP_HOST_IP_ADDRESS= ${IP_ADDRESS}
     stdin_open: true
     expose:
       - 3000
@@ -37,4 +40,3 @@ services:
     links:
       - show_and_tell
     command: npm run start
-
