@@ -1,24 +1,10 @@
-from flask import Flask, Blueprint
-from flask_restx import Api, Resource, fields, Namespace
-from werkzeug.middleware.proxy_fix import ProxyFix
-import pymongo
+from flask_restx import Resource, Namespace, fields
 import bson
+from flaskr.db import get_db
 
-app = Flask(__name__, instance_relative_config=True)
-app.wsgi_app = ProxyFix(app.wsgi_app)
+obj_name = "project"
+ns = Namespace('{}s'.format(obj_name), description='{} endpoints'.format(obj_name))
 
-# Setup API
-blueprint = Blueprint('api', __name__)
-api = Api(blueprint, version='1.0', title='Funding API',
-          description='An API to store funding opportunities',
-          )
-ns = Namespace('projects', description='Projects endpoints')
-api.add_namespace(ns)
-app.register_blueprint(blueprint, url_prefix='/api/v1')
-
-# Setup mongodb
-client = pymongo.MongoClient()
-db = client['funding']
 
 class ObjectId(fields.String):
     def format(self, value):
@@ -26,38 +12,35 @@ class ObjectId(fields.String):
         return str(value)
 
 
-project = api.model('Project', {
+project = ns.model('Project', {
     '_id': ObjectId(readonly=True, description='Unique identifier'),
     'title': fields.String(required=True),
     'description': fields.String(required=True),
 })
 
 
-obj_name = "project"
-
-
-class FundingDAO(object):
+class ProjectDAO(object):
 
     def read_all(self):
-        return list(db.projects.find({}))
+        return list(get_db().projects.find({}))
 
     def read(self, uid):
-        return db.projects.find_one({"_id": bson.objectid.ObjectId(uid)})
+        return get_db().projects.find_one({"_id": bson.objectid.ObjectId(uid)})
 
     def create(self, data):
-        inserted = db.projects.insert_one(data)
+        inserted = get_db().projects.insert_one(data)
         return self.read(inserted.inserted_id)
 
     def update(self, uid, data):
-        db.projects.update_one({"_id": bson.objectid.ObjectId(uid)}, {"$set": data})
+        get_db().projects.update_one({"_id": bson.objectid.ObjectId(uid)}, {"$set": data})
         return self.read(uid)
 
     def delete(self, uid):
-        deleted = db.projects.delete_one({"_id": bson.objectid.ObjectId(uid)})
+        deleted = get_db().projects.delete_one({"_id": bson.objectid.ObjectId(uid)})
         return deleted.deleted_count
 
 
-DAO = FundingDAO()
+DAO = ProjectDAO()
 
 
 @ns.route('/')
@@ -119,7 +102,3 @@ class Project(Resource):
             return DAO.update(id, api.payload)
         except:
             api.abort(404, "{} {} not found".format(obj_name, id))
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
