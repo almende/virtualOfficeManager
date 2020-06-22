@@ -1,6 +1,7 @@
 from flask_restx import Resource, Namespace, fields
 import bson
 from flaskr.db import get_db
+from flask import request
 
 obj_name = "project"
 ns = Namespace('{}s'.format(obj_name), description='{} endpoints'.format(obj_name))
@@ -49,6 +50,7 @@ class ProjectList(Resource):
 
     @ns.doc('list_projects')
     @ns.marshal_list_with(project)
+    @ns.response(200, '{}s found'.format(obj_name))
     def get(self):
         '''List all projects'''
         return DAO.read_all()
@@ -58,7 +60,8 @@ class ProjectList(Resource):
     @ns.marshal_with(project, code=201)
     def post(self):
         '''Create a new project'''
-        return DAO.create(api.payload), 201
+        return DAO.create(request.get_json()), 201
+    # TODO: add error responses
 
 
 @ns.route('/<string:id>')
@@ -69,13 +72,13 @@ class Project(Resource):
     @ns.doc('get_project')
     @ns.marshal_with(project)
     @ns.response(404, '{} not found'.format(obj_name))
-    @ns.response(200, '{} added'.format(obj_name))
+    @ns.response(200, '{} found'.format(obj_name))
     def get(self, id):
         '''Fetch a given resource'''
         try:
             return DAO.read(id)
         except:
-            api.abort(404, "{} {} not found".format(obj_name, id))
+            ns.abort(404, "{} {} not found".format(obj_name, id))
 
     @ns.doc('delete_project')
     @ns.response(204, '{} deleted'.format(obj_name))
@@ -90,15 +93,15 @@ class Project(Resource):
             if r > 0:
                 return '', 204
             else:
-                api.abort(404, "{} {} not found".format(obj_name, id))
+                ns.abort(404, "{} {} not found".format(obj_name, id))
 
     @ns.expect(project)
     @ns.marshal_with(project)
     @ns.response(204, '{} updated'.format(obj_name))
     @ns.response(404, '{} not found'.format(obj_name))
-    def put(self, id):
+    def patch(self, id):
         '''Update a task given its identifier'''
         try:
-            return DAO.update(id, api.payload)
+            return DAO.update(id, ns.payload)
         except:
-            api.abort(404, "{} {} not found".format(obj_name, id))
+            ns.abort(404, "{} {} not found".format(obj_name, id))
