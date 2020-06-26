@@ -10,9 +10,6 @@ function App() {
     "518561222908-ff4s6tej2ev3diklm30lrpfnaftv7kat.apps.googleusercontent.com";
   const notLoggedInMessage = "user not signed in";
   const [signedIn, setSignedIn] = useState(false);
-  const [currentUser, setCurrentUser] = useState({
-    error: notLoggedInMessage,
-  });
 
   const onAuthChange = (isSignedIn) => {
     setSignedIn(isSignedIn);
@@ -28,7 +25,7 @@ function App() {
       ],
     };
 
-    window.gapi.load("client:auth2", () => {
+    window.onLoadCallback = window.gapi.load("client:auth2", () => {
       window.gapi.client.init(params).then((response) => {
         onAuthChange(window.gapi.auth2.getAuthInstance().isSignedIn.get());
         window.gapi.auth2.getAuthInstance().isSignedIn.listen(onAuthChange);
@@ -42,20 +39,10 @@ function App() {
 
   function getContent() {
     if (signedIn) {
-      return (
-        <Dashboard
-          currentUser={currentUser}
-          setCurrentUser={setCurrentUser}
-          clientId={clientId}
-          notLoggedInMessage={notLoggedInMessage}
-        ></Dashboard>
-      );
+      return <Dashboard></Dashboard>;
     } else {
       return (
         <div>
-          {currentUser.error !== "user not signed in" && (
-            <p>ERROR: {currentUser.error}</p>
-          )}
           <p>You are not signed in. Click here to sign in.</p>
           <Button id="loginButton" onClick={onSignInButtonClick}>
             Login with Google

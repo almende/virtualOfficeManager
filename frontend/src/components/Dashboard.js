@@ -9,15 +9,16 @@ import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
 import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import { mainListItems, secondaryListItems } from "./listItems";
 import ShowAndTellList from "./ShowAndTell";
+import Avatar from "@material-ui/core/Avatar";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 function Copyright() {
   return (
@@ -116,11 +117,29 @@ const useStyles = makeStyles((theme) => ({
 export default function Dashboard() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const [anchorProfile, setAnchorProfile] = React.useState(null);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleProfileMenuOpen = (event) => {
+    console.log("HERE");
+    setAnchorProfile(event.currentTarget);
+  };
+
+  const handleProfileMenuClose = () => {
+    setAnchorProfile(null);
+  };
+
+  const handleLogout = () => {
+    handleProfileMenuClose();
+    var auth2 = window.gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log("User signed out.");
+    });
   };
 
   return (
@@ -152,11 +171,34 @@ export default function Dashboard() {
           >
             Dashboard
           </Typography>
-          <IconButton color="inherit">
+          {/* <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <NotificationsIcon />
             </Badge>
-          </IconButton>
+          </IconButton> */}
+
+          <Avatar
+            alt={
+              window.gapi.auth2
+                .getAuthInstance()
+                .currentUser.get()
+                .getBasicProfile()
+                .getName() +
+              " <" +
+              window.gapi.auth2
+                .getAuthInstance()
+                .currentUser.get()
+                .getBasicProfile()
+                .getEmail() +
+              ">"
+            }
+            src={window.gapi.auth2
+              .getAuthInstance()
+              .currentUser.get()
+              .getBasicProfile()
+              .getImageUrl()}
+            onClick={handleProfileMenuOpen}
+          />
         </Toolbar>
       </AppBar>
       <Drawer
@@ -185,6 +227,19 @@ export default function Dashboard() {
         </Container>
         <Copyright />
       </main>
+
+      <Menu
+        id="profile-menu"
+        anchorEl={anchorProfile}
+        keepMounted
+        open={Boolean(anchorProfile)}
+        onClose={handleProfileMenuClose}
+      >
+        <MenuItem onClick={handleProfileMenuClose} disabled>
+          My account
+        </MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      </Menu>
     </div>
   );
 }
