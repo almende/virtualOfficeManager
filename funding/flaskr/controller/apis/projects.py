@@ -1,11 +1,10 @@
 from flask_restx import Resource, Namespace, fields
 import bson
 from flaskr.db import get_db
-from flask import request
+from flask import request, current_app
 
 obj_name = "project"
 ns = Namespace('{}s'.format(obj_name), description='{} endpoints'.format(obj_name))
-
 
 class ObjectId(fields.String):
     def format(self, value):
@@ -44,6 +43,11 @@ class ProjectDAO(object):
 DAO = ProjectDAO()
 
 
+def check_api_key():
+    if 'API_KEY' not in current_app.config or request.headers.get('X-API-KEY') != current_app.config['API_KEY']:
+        ns.abort(401, "Invalid API key")
+
+
 @ns.route('/')
 class ProjectList(Resource):
     '''Shows a list of all funding projects, and lets you POST to add new tasks'''
@@ -58,11 +62,16 @@ class ProjectList(Resource):
     @ns.doc('create_project')
     @ns.expect(project)
     @ns.marshal_with(project, code=201)
+    # @ns.expect(parser=parser)
+    @ns.doc(security='apikey')
+    @ns.response(201, '{} created'.format(obj_name))
+    @ns.response(401, "Invalid API key")
     def post(self):
         '''Create a new project'''
+        # current_user = get_jwt_identity()
+        check_api_key()
         return DAO.create(request.get_json()), 201
     # TODO: add error responses
-
 
 @ns.route('/<string:id>')
 @ns.param('id', 'Unique identifier')
@@ -83,8 +92,11 @@ class Project(Resource):
     @ns.doc('delete_project')
     @ns.response(204, '{} deleted'.format(obj_name))
     @ns.response(404, '{} not found'.format(obj_name))
+    @ns.response(401, "Invalid API key")
+    @ns.doc(security='apikey')
     def delete(self, id):
         '''Delete a task given its identifier'''
+        check_api_key()
         try:
             r = DAO.delete(id)
         except:
@@ -99,8 +111,11 @@ class Project(Resource):
     @ns.marshal_with(project)
     @ns.response(204, '{} updated'.format(obj_name))
     @ns.response(404, '{} not found'.format(obj_name))
+    @ns.response(401, "Invalid API key")
+    @ns.doc(security='apikey')
     def patch(self, id):
         '''Update a task given its identifier'''
+        check_api_key()
         try:
             return DAO.update(id, ns.payload)
         except:

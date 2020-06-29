@@ -22,6 +22,7 @@ def app():
     # create the app
     app = create_app({
         'TESTING': True,
+        'API_KEY': 'fake key'
     })
 
     # initialize the DB
