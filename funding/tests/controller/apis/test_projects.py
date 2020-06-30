@@ -3,7 +3,8 @@ import copy
 api_version = "v1"
 base_url = '/api/{}/projects/'.format(api_version)
 
-example_project = {"title": "x", "description": "dx"}
+# The following contains only the required fields
+example_project = {"title": "x", "description": "dx", "programme": "px", "project_id": "pidx", "source": "sx"}
 obj_name = "project"
 api_key_header = {'X-API-KEY': 'fake key'}
 
@@ -11,7 +12,7 @@ api_key_header = {'X-API-KEY': 'fake key'}
 def remove_ids(json):
     json = copy.deepcopy(json)
     for o in json:
-        del o["_id"]
+        del o["id"]
 
     return json
 
@@ -32,8 +33,10 @@ def test_get_all_projects_empty(client):
 
 
 def test_get_all_projects(client):
-    data = [example_project,
-            {"title": "y", "description": "dy"}]
+    example_project_2 = example_project.copy()
+    example_project_2["title"] = "y"
+
+    data = [example_project,example_project_2]
     client.post(base_url, json=data[0], headers=api_key_header)
     client.post(base_url, json=data[1], headers=api_key_header)
     response = client.get(base_url)
@@ -45,22 +48,23 @@ def test_get_all_projects(client):
 def test_post_project_ok(client):
     response = client.post(base_url, json=example_project, headers=api_key_header)
 
-    assert remove_ids([response.get_json()])[0] == example_project
     assert response.status_code == 201
+    assert remove_ids([response.get_json()])[0] == example_project
 
 
-# TODO
-# def test_post_project_not_ok(client, db):
-#     response = client.post(base_url, json="...")
-#
-#     assert response.status_code == 400
-#     assert response.get_json() == {"message": '...'}
+def test_post_project_missing_required_field(client):
+    project_copy = example_project.copy()
+    del project_copy["title"]
+    response = client.post(base_url, json=project_copy, headers=api_key_header)
+
+    assert response.status_code == 400
+    assert response.get_json() == {'errors': {'title': "'title' is a required property"}, 'message': 'Input payload validation failed'}
 
 
 def test_delete_existing_project(client):
     post_response = client.post(base_url, json=example_project, headers=api_key_header)
 
-    response = client.delete(base_url + post_response.json["_id"], headers=api_key_header)
+    response = client.delete(base_url + post_response.json["id"], headers=api_key_header)
 
     assert response.status_code == 204
 
@@ -87,7 +91,7 @@ def test_patch_existing_project(client):  # TODO: Test whenever name is not chan
     overwritejson["title"] = "something else"
 
 
-    response = client.patch(base_url + post_response.json["_id"], json={"title": overwritejson["title"]}, headers=api_key_header)
+    response = client.patch(base_url + post_response.json["id"], json={"title": overwritejson["title"]}, headers=api_key_header)
 
     assert response.status_code == 200
     assert response.json == overwritejson

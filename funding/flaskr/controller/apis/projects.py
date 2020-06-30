@@ -12,10 +12,43 @@ class ObjectId(fields.String):
         return str(value)
 
 
+organization_fields = ns.model('Organization', {
+    'name': fields.String,
+    'country': fields.String,
+})
+
+
+range_fields = ns.model('Range', {
+    'low': fields.Float,
+    'high': fields.Float
+})
+
+
+geolocation_fields = ns.model("Geolocation", {
+    'latitude': fields.Float,
+    'longitude': fields.Float
+})
+
+
 project = ns.model('Project', {
-    '_id': ObjectId(readonly=True, description='Unique identifier'),
+    'id': ObjectId(readonly=True, description='Unique identifier', attribute='_id'),
+    'source': fields.String(required=True),
+    'source_url': fields.String(),
+    'project_id': fields.String(required=True),
+    'programme': fields.String(required=True),
+    "subtopic" : fields.String(),
+    "call" : fields.String(),
     'title': fields.String(required=True),
-    'description': fields.String(required=True),
+    "acronym" : fields.String(),
+    "status" : fields.String(),
+    "startdate" : fields.Date(),
+    "enddate" : fields.Date(),
+    'description': fields.String(),
+    "coordinator" : fields.Nested(organization_fields, skip_none=True),
+    "partners" : fields.List(fields.Nested(organization_fields, skip_none=True)),
+    "totalcost": fields.Nested(range_fields, skip_none=True),
+    "funding": fields.Nested(range_fields, skip_none=True),
+    "geolocation" : fields.Nested(geolocation_fields, skip_none=True)
 })
 
 
@@ -53,15 +86,15 @@ class ProjectList(Resource):
     '''Shows a list of all funding projects, and lets you POST to add new tasks'''
 
     @ns.doc('list_projects')
-    @ns.marshal_list_with(project)
+    @ns.marshal_list_with(project, skip_none=True)
     @ns.response(200, '{}s found'.format(obj_name))
     def get(self):
         '''List all projects'''
         return DAO.read_all()
 
     @ns.doc('create_project')
-    @ns.expect(project)
-    @ns.marshal_with(project, code=201)
+    @ns.expect(project, validate=True)
+    @ns.marshal_with(project, code=201, skip_none=True)
     # @ns.expect(parser=parser)
     @ns.doc(security='apikey')
     @ns.response(201, '{} created'.format(obj_name))
@@ -79,7 +112,7 @@ class Project(Resource):
     '''Manages a single project'''
 
     @ns.doc('get_project')
-    @ns.marshal_with(project)
+    @ns.marshal_with(project, skip_none=True)
     @ns.response(404, '{} not found'.format(obj_name))
     @ns.response(200, '{} found'.format(obj_name))
     def get(self, id):
@@ -108,7 +141,7 @@ class Project(Resource):
                 ns.abort(404, "{} {} not found".format(obj_name, id))
 
     @ns.expect(project)
-    @ns.marshal_with(project)
+    @ns.marshal_with(project, skip_none=True)
     @ns.response(204, '{} updated'.format(obj_name))
     @ns.response(404, '{} not found'.format(obj_name))
     @ns.response(401, "Invalid API key")
