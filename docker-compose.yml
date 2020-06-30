@@ -1,11 +1,23 @@
 version: '3.7'
 
 services:
+  funding:
+    build: ./funding
+    ports: 
+      - 4999:5000
+    command: flask run --host=0.0.0.0
+    environment:
+      - FLASK_APP=flaskr
+      - DB=mongodb:27017
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
   show_and_tell:
     build: ./show_and_tell
     command: python manage.py run -h 0.0.0.0
     ports:
-      - 5000:5000
+      - 4999:5000
     environment:
       - FLASK_ENV=development
       - FLASK_APP=flaskr
@@ -16,7 +28,7 @@ services:
       - FN_CLIENT_SECRET=fKfPPcJfQVrWKkQyivOFti0x
       - FN_FLASK_SECRET_KEY=thisisasecret
       - FN_SERVICE_JSON_FILE=google_service_account/graceful-splice-217714-df2055719b16.json
-  db:
+  mongodb:
     image: mongo:latest
     environment:
       - MONGO_DATA_DIR=/usr/data/db

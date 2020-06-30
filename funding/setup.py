@@ -8,10 +8,10 @@ setuptools.setup(
     version="0.0.1",
     author="Carolyn Langen",
     author_email="carolyn@almende.com",
-    description="Funding opportunities manager",
+    description="Funding manager",
     long_description=__doc__,
     url="https://github.com/almende/virtualOfficeManager/tree/master/funding",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(include=['flaskr', 'flaskr.*']),
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
@@ -20,6 +20,7 @@ setuptools.setup(
     install_requires = [
         "flask",
         "pytest",
+        "virtualenv",
         "flask_cors",
         "gunicorn",
         "flask-restx",
