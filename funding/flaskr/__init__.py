@@ -2,6 +2,23 @@ from flask import Flask, jsonify
 from werkzeug.middleware.proxy_fix import ProxyFix
 import os
 from flask_cors import CORS
+# from logging.config import dictConfig
+#
+# dictConfig({
+#     'version': 1,
+#     'formatters': {'default': {
+#         'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+#     }},
+#     'handlers': {'wsgi': {
+#         'class': 'logging.StreamHandler',
+#         'stream': 'ext://flask.logging.wsgi_errors_stream',
+#         'formatter': 'default'
+#     }},
+#     'root': {
+#         'level': 'DEBUG',
+#         'handlers': ['wsgi']
+#     }
+# })
 
 
 def handle_error(error):
@@ -11,6 +28,7 @@ def handle_error(error):
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
+
     app.wsgi_app = ProxyFix(app.wsgi_app)
     cors = CORS(app)
 

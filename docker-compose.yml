@@ -5,9 +5,8 @@ services:
     build: ./funding
     ports: 
       - 4999:5000
-    command: flask run --host=0.0.0.0
+    command: waitress-serve --port=5000 --call 'flaskr:create_app'
     environment:
-      - FLASK_APP=flaskr
       - DB=mongodb:27017
     links:
       - mongodb
@@ -17,7 +16,7 @@ services:
     build: ./show_and_tell
     command: python manage.py run -h 0.0.0.0
     ports:
-      - 4999:5000
+      - 5000:5000
     environment:
       - FLASK_ENV=development
       - FLASK_APP=flaskr

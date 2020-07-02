@@ -22,7 +22,7 @@ setuptools.setup(
         "pytest",
         "virtualenv",
         "flask_cors",
-        "gunicorn",
+        "waitress",
         "flask-restx",
         "pymongo"
     ]
