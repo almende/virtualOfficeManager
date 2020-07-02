@@ -16,7 +16,7 @@ RE_SUB_REPLACE_STRING = r"\1{}\2{}"
 
 def build_drive_api_v3():
     credentials = build_credentials(AUTHORIZATION_SCOPE)
-    return googleapiclient.discovery.build('calendar', 'v3', credentials=credentials)
+    return googleapiclient.discovery.build('calendar', 'v3', credentials=credentials, cache_discovery=False)
 
 
 @bp.route('/gcal/event', methods=['PATCH'])

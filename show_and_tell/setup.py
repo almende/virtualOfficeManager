@@ -19,15 +19,14 @@ setuptools.setup(
     python_requires='>=3.6',
     install_requires = [
         "flask",
-        "authlib==0.13",
-        "flask==1.0.2",
+        "pytest",
+        # "authlib==0.13",
         "google-api-python-client",
-        "google-auth",
-        "virtualenv",
-        "google-api-python-client",
+        # "google-auth",
+        # "virtualenv",
         "oauth2client",
         "flask_cors",
-        "gunicorn",
+        "waitress",
         "flask-restx"
     ]
 )

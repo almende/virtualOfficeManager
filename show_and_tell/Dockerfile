@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3.6.9
+FROM python:3.7-alpine
 
 # set work directory
 WORKDIR /usr/src/app
@@ -11,9 +11,9 @@ ENV PYTHONUNBUFFERED 1
 # copy files
 COPY ./setup.py ./setup.py
 COPY ./flaskr ./flaskr
-COPY ./manage.py .
 COPY ./google_service_account/ ./google_service_account
+COPY ./instance ./instance
 
 # install code and dependencies
 RUN pip install --upgrade pip
-RUN pip install . -t /usr/src/app
+RUN pip install -e .

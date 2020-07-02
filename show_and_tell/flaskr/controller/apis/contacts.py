@@ -14,7 +14,7 @@ AUTHORIZATION_SCOPE = 'https://www.googleapis.com/auth/user.organization.read'
 
 def build_contacts_api_v3():
     credentials = build_credentials(AUTHORIZATION_SCOPE)
-    return googleapiclient.discovery.build('people', 'v1', credentials=credentials)
+    return googleapiclient.discovery.build('people', 'v1', credentials=credentials, cache_discovery=False)
 
 class ContactDAO(object):
     def read_all(self):
