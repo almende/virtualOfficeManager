@@ -11,7 +11,6 @@ ENV PYTHONUNBUFFERED 1
 # copy files
 COPY ./setup.py ./setup.py
 COPY ./flaskr ./flaskr
-COPY ./manage.py .
 COPY ./instance ./instance
 
 # install code and dependencies
