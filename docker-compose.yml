@@ -12,9 +12,11 @@ services:
       - mongodb
     depends_on:
       - mongodb
+    hostname: funding
   show_and_tell:
     build: ./show_and_tell
     command: waitress-serve --port=5000 --call 'flaskr:create_app'
+    hostname: show_and_tell
     ports:
       - 5000:5000
   mongodb:
@@ -29,11 +31,8 @@ services:
     command: mongod --logpath=/dev/null # --quiet
   frontend:
     build: ./frontend
-    stdin_open: true
-    expose:
-      - 3000
     ports:
-      - 3000:3000
+      - 3000:5000
     links:
       - show_and_tell
-    command: npm run start
+    command: serve -s build

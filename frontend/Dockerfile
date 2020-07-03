@@ -1,21 +1,22 @@
-# pull official base image
-FROM node:10.16.1
+# based on: https://medium.com/ai2-blog/dockerizing-a-react-application-3563688a2378
 
-# set working directory
-WORKDIR /usr/src/app
+# You should always specify a full version here to ensure all of your developers
+# are running the same version of Node.
+FROM node:12.18.2-alpine3.12
 
-# Copies package.json and package-lock.json to Docker environment
-COPY package*.json ./
+# Override the base log level (info).
+ENV NPM_CONFIG_LOGLEVEL warn
 
-# Installs all node packages
-RUN npm install
+# Install and configure `serve`.
+RUN npm install -g serve
+# CMD serve -s build
+# EXPOSE 5000
 
-# add app
+# Copy all local files into the image.
 COPY . .
 
-RUN ls
- 
-# Finally runs the application
-CMD [ "npm", "run", "start" ]
+# COPY npm-shrinkwrap.json npm-shrinkwrap.json
+RUN npm install
 
-
+# Build for production.
+RUN npm run build
