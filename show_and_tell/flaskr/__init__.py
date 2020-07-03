@@ -28,10 +28,11 @@ def create_app(test_config=None):
     app.secret_key = os.environ.get("FN_FLASK_SECRET_KEY", default=False)
 
     # app.register_blueprint(google_auth.bp)
-    app.register_blueprint(google_drive.bp)
+    # app.register_blueprint(google_drive.bp)
     app.register_blueprint(google_calendar.bp)
-    app.register_blueprint(google_contacts.bp)
+    # app.register_blueprint(google_contacts.bp)
 
-    app.register_blueprint(api1)
+    # app.register_blueprint(api1)
+
 
     return app
