@@ -2,6 +2,8 @@ from __future__ import print_function
 import datetime, re
 import googleapiclient.discovery
 from .google_service import build_credentials
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 import flask
 
@@ -19,8 +21,23 @@ def build_drive_api_v3():
     return googleapiclient.discovery.build('calendar', 'v3', credentials=credentials, cache_discovery=False)
 
 
+def check_token():
+    # Get token and verify it
+    token = flask.request.headers.get('Authorization').split(' ')[1]
+    idinfo = id_token.verify_oauth2_token(token, requests.Request())
+
+    if idinfo['aud'] not in flask.current_app.config['GOOGLE_TOKEN_ACCEPTED_CLIENTIDS']:
+        raise ValueError('Could not verify audience.')
+    if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+        raise ValueError('Wrong issuer.')
+    if idinfo['hd'] not in flask.current_app.config['GOOGLE_TOKEN_ACCEPTED_DOMAINS']:
+        raise ValueError('Wrong hosted domain.')
+
+
 @bp.route('/gcal/event', methods=['PATCH'])
 def update_event():
+    check_token()
+
     cal_api = build_drive_api_v3()
 
     payload = {}
@@ -48,6 +65,8 @@ def update_event():
 
 @bp.route('/gcal/view/<num_entries>', methods=['GET'])
 def view_upcoming_entries(num_entries=10):
+    check_token()
+
     cal_api = build_drive_api_v3()
 
     # Call the Calendar API

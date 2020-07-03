@@ -10,9 +10,11 @@ function App() {
     "518561222908-ff4s6tej2ev3diklm30lrpfnaftv7kat.apps.googleusercontent.com";
   const notLoggedInMessage = "user not signed in";
   const [signedIn, setSignedIn] = useState(false);
+  const [currentUserProfile, setCurrentUserProfile] = useState({});
 
   const onAuthChange = (isSignedIn) => {
     setSignedIn(isSignedIn);
+    setCurrentUserProfile();
   };
 
   useEffect(() => {
@@ -25,7 +27,7 @@ function App() {
       ],
     };
 
-    window.onLoadCallback = window.gapi.load("client:auth2", () => {
+    window.gapi.load("client:auth2", () => {
       window.gapi.client.init(params).then((response) => {
         onAuthChange(window.gapi.auth2.getAuthInstance().isSignedIn.get());
         window.gapi.auth2.getAuthInstance().isSignedIn.listen(onAuthChange);
