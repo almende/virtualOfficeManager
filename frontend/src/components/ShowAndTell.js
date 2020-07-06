@@ -71,16 +71,19 @@ export default function ShowAndTellList() {
   }
 
   async function fetchData(ignore) {
-    const result = await axios("http://localhost:5000/gcal/view/" + query, {
-      headers: {
-        Authorization:
-          "Bearer " +
-          window.gapi.auth2
-            .getAuthInstance()
-            .currentUser.get()
-            .getAuthResponse().id_token,
-      },
-    });
+    const result = await axios(
+      window.SHOW_AND_TELL_URL + "/gcal/view/" + query,
+      {
+        headers: {
+          Authorization:
+            "Bearer " +
+            window.gapi.auth2
+              .getAuthInstance()
+              .currentUser.get()
+              .getAuthResponse().id_token,
+        },
+      }
+    );
 
     result.data.forEach(getStartDateTimeDurationFromEntry);
 
@@ -91,7 +94,7 @@ export default function ShowAndTellList() {
 
   async function patchData(payload) {
     const entry = await axios.patch(
-      "http://localhost:5000/gcal/event",
+      window.SHOW_AND_TELL_URL + "/gcal/event",
       payload,
       {
         headers: {

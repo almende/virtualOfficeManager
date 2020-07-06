@@ -12,11 +12,17 @@ RUN npm install -g serve
 # CMD serve -s build
 # EXPOSE 5000
 
-# Copy all local files into the image.
+# Copy package.json
+COPY package.json ./package.json
+
+# install
+RUN npm install
+
+# copy remaining files
 COPY . .
 
-# COPY npm-shrinkwrap.json npm-shrinkwrap.json
-RUN npm install
+# replace config file with production file
+COPY ./public/config_production.js ./public/config.js
 
 # Build for production.
 RUN npm run build
