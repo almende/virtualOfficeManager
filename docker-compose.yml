@@ -8,6 +8,7 @@ services:
     command: waitress-serve --port=5000 --call 'flaskr:create_app'
     environment:
       - DB=mongodb:27017
+      - HTTPS_PROXY=true
     links:
       - mongodb
     depends_on:
