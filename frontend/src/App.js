@@ -20,8 +20,7 @@ function App() {
   useEffect(() => {
     const params = {
       clientId: clientId,
-      scope: "https://www.googleapis.com/auth/contacts",
-      apiKey: "AIzaSyD3uim3mnA75qTJzhtgT6DSTegwMHk7dA0",
+      scope: "https://www.googleapis.com/auth/contacts.readonly",
       discoveryDocs: [
         "https://www.googleapis.com/discovery/v1/apis/people/v1/rest",
       ],
